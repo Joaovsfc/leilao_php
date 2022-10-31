@@ -1,0 +1,13 @@
+.login_div{
+    max-width: 30%;
+    max-height: 25%;
+    background-color: red;
+}
+#imgUserHeader{
+    max-width: 2.5em; max-height: 2.5em;
+    padding-right: 1em;
+}
+
+.card_login_{
+    background: black
+}
