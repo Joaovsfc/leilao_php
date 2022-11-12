@@ -22,7 +22,7 @@
     <script src="js/scripts.js"></script>
 
 </head>
-<body id="page-top" class="row">
+<body id="page-top" class="">
 
 <?php
     //require "sair.php";
@@ -31,7 +31,7 @@
     if(isset($_SESSION["novo_usuario"]) and $_SESSION["novo_usuario"] == true){
         require "cadastros/usuario.php";
     }
-    elseif (!isset ( $_SESSION["usuario"])) {
+    elseif (!isset ($_SESSION["usuario"])) {
         //inserir uma tela de login
         require "paginas/login.php";
     } else {

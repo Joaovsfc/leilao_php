@@ -3,11 +3,10 @@
     if ( $_POST ) {
         
         //recuperar login e senha
-        $login = trim( $_POST["login"] ?? NULL );
+        $login = trim($_POST["nome"] ?? '');
 
-        $senha = trim ( $_POST["senha"] ?? NULL );
+        $senha = trim($_POST["senha"] ?? '');      
 
-        //validar o login e a senha
         if ((empty($login)) or (empty($senha))) {
             //mostrar um erro na tela
             ?>
@@ -17,9 +16,7 @@
             </script>
             <?php
             exit;
-        }
-
-        
+        }        
 
         //selecionar os dados do banco
         $sql = "select id_usuario, nome, email, senha 
@@ -36,7 +33,7 @@
         if (empty($dados)){
             ?>
             <script>
-                alert("Usuario não existe");
+                alert("Usuario e/ou senha incorretos");
                 history.back(); 
             </script>
             <?php
@@ -44,7 +41,8 @@
         } 
         
         //guardar as informações na sessao
-        $_SESSION["usuario"] = array("id"=>$dados->id_usuario,
+        $_SESSION["usuario"] = array(
+            "id"=>$dados->id_usuario,
             "nome"=>$dados->nome,
             "login"=>$dados->email);
         //direcionar para uma página home
@@ -60,8 +58,8 @@
     <div class="col-4 card" style="padding: 1em;margin: 1em">
         <h1 class="text-center">Efetuar Login</h1>
         <form name="formLogin" method="post" data-parsley-validate="">
-            <label for="login">Login:</label>
-            <input type="text" name="login" id="login"
+        <label for="login">Login:</label>
+            <input type="text" name="nome" id="nome"
             class="form-control" required
             data-parsley-required-message="Por favor preencha este campo">
             <br>
@@ -69,16 +67,8 @@
             <input type="password" name="senha" id="senha"
             class="form-control" required 
             data-parsley-required-message="Por favor preencha este campo">
-            <span class="float-end"> <a href="javascript:cadUsuario()">Criar uma conta</a></span>
+            <span class="float-end"> <a href="http://localhost/leilao/site/">Criar uma conta</a></span>
             <button type="submit" class="btn btn-success w-100">Efetuar Login</button>
         </form>
     </div>
 </div>
-<script>
-    function cadUsuario(){
-        <?php 
-            $_SESSION["usuario"] = array("novo_usuario"=>true);
-        ?>
-        
-    }
-</script>

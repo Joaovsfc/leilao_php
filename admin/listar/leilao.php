@@ -38,10 +38,10 @@
                                 <td><?=$dados->dt_inicio?></td>
                                 <td><?=$dados->dt_fim?></td>
                                 <td>
-                                    <a href="cadastros/leilao/<?=$dados->id_item?>" title="Editar Item" class="btn float-end">
+                                    <a href="cadastros/leilao/<?=$dados->id_leilao?>" title="Editar Leilão" class="btn float-end">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a href="cadastros/leilao" title="Excluir Item" class="btn float-end">
+                                    <a href="javascript:excluir(<?=$dados->id_leilao?>)" title="Excluir Leilão" class="btn float-end">
                                         <i class="bi bi-trash3"></i>
                                     </a>
                                 </td>

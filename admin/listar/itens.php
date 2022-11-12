@@ -27,7 +27,8 @@
                 <tbody>
                     <?php
                         //selecionando todas os itens com suas categorias 
-                        $consulta = $pdo->prepare("SELECT i.id_item, i.nome as nome_item, i.descricao as descricao_item, c.nome as nome_categoria FROM item i JOIN categoria c ON i.id_categoria = c.id_categoria ORDER BY i.id_item;");
+                        $consulta = $pdo->prepare("SELECT i.id_item, i.nome as nome_item, i.descricao as descricao_item, c.nome as nome_categoria FROM item i JOIN categoria c ON i.id_categoria = c.id_categoria WHERE i.id_usuario = :id ORDER BY i.id_item;");
+                        $consulta->bindParam(":id", $_SESSION['usuario']['id']);    
                         $consulta->execute();
 
                         while ($dados = $consulta->fetch(PDO::FETCH_OBJ)){
