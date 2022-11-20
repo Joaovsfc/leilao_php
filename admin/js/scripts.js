@@ -1,5 +1,6 @@
-function mensagemErro(mensagem){
+function mensagemErroHistoryBack(mensagem){
     alert(mensagem);
+    history.back(); 
     exit;
 } 
 

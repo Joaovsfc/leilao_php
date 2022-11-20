@@ -2,10 +2,7 @@
     //se nao existir a variavel page
     if ( !isset ($page) ) exit;
 
-    $nome_item = NULL;
-    $descricao_item = NULL;
-    $id_item = NULL;
-    $id_categoria_item = NULL;
+    $nome_item = $descricao_item = $id_item = $id_categoria_item = $foto = NULL;
 
     if ( !empty($id) ) {
         $sql = "SELECT i.*, c.nome as nome_categoria FROM item i JOIN categoria c ON i.id_categoria = c.id_categoria WHERE id_item = :id limit 1";
@@ -38,41 +35,62 @@
         
         <div class="card-body">
             <form name="formCadastro" method="post" action="http://localhost/leilao/admin/salvar/itens" data-parsley-validate="">
-                <input type="hidden" name="id" id="id" value="<?=$id?>">
-                <label for="nome">Nome do Item:</label>
-                <input type="text" name="nome" id="nome" class="form-control" required data-parsley-required-message="Por favor, preencha este campo" value="<?=$nome_item?>">
+                <div class="row">
+                    <div class="col-10">
+                        <input type="hidden" name="id" id="id" value="<?=$id?>">
+                        <label for="nome">Nome do Item:</label>
+                        <input type="text" name="nome" id="nome" class="form-control" required data-parsley-required-message="Por favor, preencha este campo" value="<?=$nome_item?>">
+                    </div>
+                    <div class="col-2">
+                        <br>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> Salvar Dados
+                        </button>
+                    </div>
+                </div>
+                
                 <br>
                 <label for="descricao">Descrição do Item:</label>
                 <input type="text" name="descricao" id="descricao" class="form-control" required data-parsley-required-message="Por favor, preencha este campo" value="<?=$descricao_item?>">
                 <br>
-                <select name="categoria" id="categoria" class="form-select" aria-label="Default select example" required data-parsley-required-message="Por favor, preencha este campo">
-                    <?php
-                        if (empty($id_item)){
-                            ?>
-                                <option selected value="">Selecione uma Categoria</option>
+                <div class="row">
+                    
+                    <div class="col-6">
+                        <label for="categoria">Categoria:</label>
+                        <br>
+                        <select name="categoria" id="categoria" class="form-select" aria-label="Default select example" required data-parsley-required-message="Por favor, preencha este campo">
                             <?php
-                        }else{
-                            ?>
-                                <option name="categoria" value="<?=$id_categoria_item?>"><?=$nome_categoria?></option>
-                            <?php
-                        }
-                        $consulta = $pdo->prepare("SELECT * FROM categoria;");
-                        $consulta->execute();
+                                if (empty($id_item)){
+                                    ?>
+                                        <option selected value="">Selecione uma Categoria</option>
+                                    <?php
+                                }else{
+                                    ?>
+                                        <option name="categoria" value="<?=$id_categoria_item?>"><?=$nome_categoria?></option>
+                                    <?php
+                                }
+                                $consulta = $pdo->prepare("SELECT * FROM categoria;");
+                                $consulta->execute();
 
-                        while ($dados = $consulta->fetch(PDO::FETCH_OBJ)){
-                            if($dados->id_categoria != $id_categoria_item){
+                                while ($dados = $consulta->fetch(PDO::FETCH_OBJ)){
+                                    if($dados->id_categoria != $id_categoria_item){
+                                    ?>
+                                    <option name="categoria" value="<?=$dados->id_categoria?>"><?=$dados->nome?></option>
+                                    <?php   
+                                    }
+                                }
                             ?>
-                            <option name="categoria" value="<?=$dados->id_categoria?>"><?=$dados->nome?></option>
-                            <?php   
-                            }
-                        }
-                    ?>
-
-                </select>
-                <br>
-                <button type="submit" class="btn btn-success">
-                    <i class="fas fa-check"></i> Salvar Dados
-                </button>
+                        </select>
+                    </div>
+                    <div class=col-6>
+                        <label for="imagem">Imagem:</label>
+                        <br>
+                        <input type="file" name="foto" id="foto" class="form-control-file">
+                        <?php
+                            if(!empty($foto))
+                        ?>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

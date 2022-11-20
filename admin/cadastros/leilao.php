@@ -2,6 +2,7 @@
     //se nao existir a variavel page
     if ( !isset ($page) ) exit;
 
+    $id_usuario = $_SESSION['usuario']['id'];
     $titulo_leilao = NULL;
     $descricao_leilao = NULL;
     $dt_inicio = NULL;
@@ -47,7 +48,7 @@
             </div>
         
         <div class="card-body">
-            <form name="formCadastro" method="post" action="" data-parsley-validate="">
+            <form name="formCadastro" method="post" action="salvar/leilao" data-parsley-validate="">
                 <input type="hidden" name="id" id="id" value="<?=$id?>">
                 <label for="titulo">Titulo do Leilão:</label>
                 <div class="row">
@@ -98,14 +99,36 @@
                 <br>
                 <span>Seus produtos disponiveis:</span>
                 <?php
-                        $consulta = $pdo->prepare("SELECT * FROM `item` a WHERE a.id_item not in(SELECT b.id_item FROM leilao_itens b);");
+                        $consultaLeilaoItens = $pdo->prepare("SELECT id_item AS itens FROM `leilao_itens` a WHERE a.id_leilao = :id_leilao;");
+                        $consultaLeilaoItens->bindParam(":id_leilao", $id);
+                        $consultaLeilaoItens->execute();
+                        $idsItensLeilao = [];
+                        
+                        while ($dados = $consultaLeilaoItens->fetch(PDO::FETCH_OBJ)){
+                            echo($dados->itens);
+                            array_push($idsItensLeilao,$dados->itens);
+                        }              
+
+                        $consulta = $pdo->prepare("SELECT * FROM `item` a WHERE id_usuario = :id_usuario AND a.id_item NOT IN(SELECT b.id_item FROM leilao_itens b WHERE b.id_leilao <> :id_leilao);");
+                        $consulta->bindParam(":id_usuario", $id_usuario);
+                        $consulta->bindParam(":id_leilao", $id);
                         $consulta->execute();
 
                         while ($dados = $consulta->fetch(PDO::FETCH_OBJ)){
                             ?>
                             <div class="input-group mb-3">
                                 <div class="input-group-text">
-                                    <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input" id="<?=$dados->id_item?>" name="arremate<?=$dados->id_item?>">
+                                    <?php
+                                        if(!in_array($dados->id_item,$idsItensLeilao)){
+                                        ?>
+                                            <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input" id="<?=$dados->id_item?>" name="arremate<?=$dados->id_item?>">
+                                        <?php 
+                                        }else{
+                                            ?>
+                                            <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input" checked id="<?=$dados->id_item?>" name="arremate<?=$dados->id_item?>">
+                                        <?php  
+                                        }
+                                    ?>
                                 </div>
                                 <label for="">  </label>
                                 <span><?=$dados->id_item?>: <?=$dados->nome?></span>

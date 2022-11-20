@@ -7,6 +7,8 @@
         $descricao_item = trim($_POST["descricao"]?? NULL);
         $id_categoria_item = intval(trim($_POST["categoria"]?? NULL));
         $id_usuario = $_SESSION['usuario']['id'];
+
+        $foto = $_FILES['foto']['name'] ?? NULL;
     
         if(empty($nome_item)){
             mensagemErro("Preencha o nome do item!");

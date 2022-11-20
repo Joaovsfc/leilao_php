@@ -28,10 +28,8 @@
     //require "sair.php";
     //verificar se existe login
 
-    if(isset($_SESSION["novo_usuario"]) and $_SESSION["novo_usuario"] == true){
-        require "cadastros/usuario.php";
-    }
-    elseif (!isset ($_SESSION["usuario"])) {
+    
+    if (!isset ($_SESSION["usuario"])) {
         //inserir uma tela de login
         require "paginas/login.php";
     } else {
