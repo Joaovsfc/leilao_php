@@ -1,6 +1,5 @@
 <?php
 
-    //print_r($_POST);
     if(!isset($page)) exit;
     
     if($_POST){    
@@ -16,9 +15,23 @@
         $valorInicial    = intval(trim($_POST["valorInicial"]?? NULL));
         $dtInicio        = trim($_POST["dtInicio"] ?? NULL);
         $dtFim           = trim($_POST["dtFim"] ?? NULL);
+
+        $id == NULL ? $idLeilaoBusca = 0 : $idLeilaoBusca = $id;
+    
+
+        $dataAtual = date("Y-m-d H:i:s");
+        
+        if(strtotime($dtInicio) >= strtotime($dtFim)){
+            echo "<script>mensagemErroHistoryBack('A data de inicio não pode ser maior que a data final.')</script>";
+        }elseif(strtotime($dtInicio) < strtotime(date("Y-m-d H:i:s"))){
+            echo "<script>mensagemErroHistoryBack('A data de inicio não pode ser retroativa.')</script>";
+        }
+
         //Conversão para o padrão para gravar no BD
         $dtInicio != NULL ? $dtInicio = str_replace("T", " ",$dtInicio): NULL;
+    
         $dtFim    != NULL ? $dtFim = str_replace("T", " ",$dtFim): NULL;
+
 
         if(empty($_SESSION)){
             echo "<script>mensagemErroHistoryBack('Sem usuario na seção favor fazer o login novamente.')</script>";
@@ -44,10 +57,11 @@
             echo "<script>mensagemErroHistoryBack('Preencha o valor inicial do leilão!')</script>";
             exit;
         }
+        $consulta = $pdo->prepare("SELECT * FROM `item` a WHERE id_usuario = :id_usuario AND a.id_item NOT IN(SELECT b.id_item FROM leilao_itens b WHERE b.id_leilao <> :id_leilao);");
 
         $consulta = $pdo->prepare("SELECT * FROM `item` a WHERE id_usuario = :id_usuario AND a.id_item NOT IN(SELECT b.id_item FROM leilao_itens b WHERE b.id_leilao <> :id_leilao);");
         $consulta->bindParam(":id_usuario", $id_usuario);
-        $consulta->bindParam(":id_leilao", $id);
+        $consulta->bindParam(":id_leilao", $idLeilaoBusca);
         $consulta->execute();
 
         while ($dados = $consulta->fetch(PDO::FETCH_OBJ)){
@@ -56,7 +70,7 @@
                 array_push($itens,$dados->id_item);
             }
         }
-
+        
         if(empty($itens)){
             echo "<script>
                     mensagemErroHistoryBack('Nenhum item selecionado para o leilão!');

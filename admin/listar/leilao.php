@@ -37,8 +37,8 @@
                             <tr>
                                 <td><?=$dados->titulo?></td>
                                 <td><?=$dados->descricao?></td>
-                                <td><?=$dados->dt_inicio?></td>
-                                <td><?=$dados->dt_fim?></td>
+                                <td><?=date('d/m/Y H:i:s', strtotime($dados->dt_inicio))?></td>
+                                <td><?=date('d/m/Y H:i:s', strtotime($dados->dt_fim))?></td>
                                 <td>
                                     <a href="cadastros/leilao/<?=$dados->id_leilao?>" title="Editar Leilão" class="btn float-end">
                                         <i class="bi bi-pencil-square"></i>
@@ -56,3 +56,13 @@
         </div>
     </div>
 </div>
+<script>
+function excluir(id) {
+  let text = "Você realmente deseja excluir o leilão selecionado?";
+  if (confirm(text) == true) {
+    location.href='excluir/leilao/'+id;
+  } else {
+    alert("Operação cancelada!");
+  }
+}
+</script>

@@ -33,6 +33,10 @@
         $dt_inicio != NULL ? $dt_inicio = str_replace(" ", "T",$dt_inicio): NULL;
         $dt_fim    != NULL ? $dt_fim = str_replace(" ", "T",$dt_fim): NULL;
         $is_arremate != NULL ? $is_arremate = "checked" : $is_arremate = "";
+
+        $idLeilaoBusca = $id;
+    }else{
+        $idLeilaoBusca = 0;
     }
 ?>
 <div class="row">
@@ -111,7 +115,7 @@
 
                         $consulta = $pdo->prepare("SELECT * FROM `item` a WHERE id_usuario = :id_usuario AND a.id_item NOT IN(SELECT b.id_item FROM leilao_itens b WHERE b.id_leilao <> :id_leilao);");
                         $consulta->bindParam(":id_usuario", $id_usuario);
-                        $consulta->bindParam(":id_leilao", $id);
+                        $consulta->bindParam(":id_leilao", $idLeilaoBusca);
                         $consulta->execute();
 
                         while ($dados = $consulta->fetch(PDO::FETCH_OBJ)){

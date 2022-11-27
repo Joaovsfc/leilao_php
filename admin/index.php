@@ -6,6 +6,11 @@
     error_reporting(E_ALL);
     //incluir o arquivo de conexao com o banco
     require "../config.php";
+
+    $pageTotal = substr($_SERVER["REQUEST_URI"], 14, 8);
+    //echo $pageTotal;//13-22
+    if($pageTotal != 'operacao' ){
+
 ?>
 
 <!DOCTYPE html>
@@ -20,11 +25,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/scripts.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    
 
 </head>
 <body id="page-top" class="">
 
 <?php
+}
     //require "sair.php";
     //verificar se existe login
 
@@ -33,7 +41,9 @@
         //inserir uma tela de login
         require "paginas/login.php";
     } else {
-        $page = "listar/itens";
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $page = "comercial/leilao";
 
         if ( isset ( $_GET["param"] ) ) {
             $page = explode("/",$_GET["param"]);
@@ -44,22 +54,31 @@
 
             $page = "{$pasta}/{$pagina}";
         }
-
-        $page = "{$page}.php";
-
-        //adicionar o header
-        require "header.php";
         
-        if ( file_exists($page) ) {
-            require $page;
-        } else {
-            require "paginas/erro.php";
-        }
+        
+        $page = "{$page}.php";
+        //echo substr($page, 0,8);
+        if(substr($page, 0,8) != 'operacao' ){
+            //adicionar o header
+            require "header.php";
+            
+            if ( file_exists($page) ) {
+                require $page;
+            } else {
+                require "paginas/erro.php";
+            }
 
-        require "footer.php";
+            require "footer.php";
+        }
+        
 
     } 
-    
+
+    if(substr($_SERVER["REQUEST_URI"], 14, 8) != 'operacao' ){
 ?>
 </body>
 </html>
+<?php
+    }else{
+       echo '<div></div>';
+    }

@@ -15,6 +15,7 @@ function validaDigitacaoArremate(){
     }
 } 
 
-function teste(){
-    alert('hello word');
+function excluirTeste(modulo, id){
+    const r = confirm("Are you sure you want to do that?");
+    alert(r);
 }

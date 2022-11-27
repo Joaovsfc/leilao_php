@@ -11,3 +11,14 @@
 .card_login_{
     background: black
 }
+
+.card_mensagens{
+    background: #F6F4F4;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 1px 1px 1px #999;
+}
+
+#div_header_leiloes{
+    margin: 0 auto;
+}

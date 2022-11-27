@@ -8,19 +8,32 @@
         $id_categoria_item = intval(trim($_POST["categoria"]?? NULL));
         $id_usuario = $_SESSION['usuario']['id'];
 
-        $foto = $_FILES['foto']['name'] ?? NULL;
-    
+        $caminho_apagar = trim($_POST["caminho_apagar"]?? NULL);
+        $foto = $_FILES["foto"]["name"] ?? NULL;
+        //$foto == NULL ? $foto = $caminho_apagar: NULL;
+        
         if(empty($nome_item)){
-            mensagemErro("Preencha o nome do item!");
+            mensagemErroHistoryBack("Preencha o nome do item!");
         }
         if(empty($descricao_item)){
-            echo "<script>mensagemErro('Preencha a descrição do item!')</script>";
+            echo "<script>mensagemErroHistoryBack('Preencha a descrição do item!')</script>";
             exit;
         }
         if(empty($id_categoria_item)){
-            echo "<script>mensagemErro('Preencha a descrição do item!')</script>";
+            echo "<script>mensagemErroHistoryBack('Preencha a descrição do item!')</script>";
             exit;
         }
+        if(empty($foto) & empty($id_item)){
+            echo "<script>mensagemErroHistoryBack('Favor selecionar uma imagem!')</script>";
+            exit;
+        }
+        elseif(!empty($foto)){
+            $foto = time()."_{$foto}";
+            if(!move_uploaded_file($_FILES["foto"]["tmp_name"], "../imagens/{$foto}")){
+                echo "<script>mensagemErroHistoryBack('Erro aao copiar arquivo!')</script>";
+                exit;
+            }
+        }      
         if(empty($id_item)){
             $sql = "INSERT INTO item (nome, descricao, id_categoria, id_usuario) VALUES (:nome_item, :descricao_item, :id_categoria_item, :id_usuario)";
         }else{
@@ -36,11 +49,34 @@
             !empty($id_item) ?$consulta->bindParam(":id_item", $id_item) : NULL;
             
             if ( !$consulta->execute() ){
-                mensagemErro("Não foi possível salvar os dados");
+                mensagemErroHistoryBack("Não foi possível salvar os dados");
+            }
+            if (empty($id_item)) $id_item = $pdo->lastInsertId();
+
+            if(!empty($foto)){
+                $sqlFoto = "DELETE FROM imagem WHERE id_item = :id_item;";
+                $consulta = $pdo->prepare($sqlFoto);
+                $consulta->bindParam("id_item", $id_item);
+                if(!$consulta->execute()){
+                    mensagemErroHistoryBack("Não foi possível remover os dados da foto.");
+                }     
+                if(!empty($caminho_apagar)){
+                    if(!unlink('../imagens/'.$caminho_apagar)){
+                        mensagemErroHistoryBack("Não foi possível remover os dados da foto do servidor.");
+                    } 
+                }
+                 
+                $sqlFoto = "INSERT INTO imagem (id_item, caminho) VALUES (:id_item, :caminho);";
+                $consulta = $pdo->prepare($sqlFoto);
+                $consulta->bindParam(":id_item", $id_item);
+                $consulta->bindParam(":caminho", $foto);
+                if(!$consulta->execute()){
+                    mensagemErroHistoryBack("Não foi possível salvar os dados da foto.");
+                } 
             }
         }
 
         echo "<script>location.href='listar/itens';</script>";
         exit;
     }
-mensagemErro("Requisição inválida");
+mensagemErroHistoryBack("Requisição inválida");
