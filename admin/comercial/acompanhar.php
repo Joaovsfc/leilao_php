@@ -37,7 +37,7 @@
                 <?php
                     if($dadosHora->is_arremate == true){
                     ?>
-                    <strong>Arrematar por: R$ <?=$dadosHora->valor_arremate?> </strong>
+                    <strong id="valor_arremate">Arrematar por: R$ <?=$dadosHora->valor_arremate?> </strong>
                     <?php
                     }
                 ?>
@@ -46,7 +46,7 @@
                 <?php
                     if($dadosHora->is_arremate == true){
                     ?>
-                    <a href="#" class="btn btn-success" ><i class="bi bi-hammer"></i></a>
+                    <a href="javascript:arrematar(<?=$_SESSION['usuario']['id']?>)" class="btn btn-success" ><i class="bi bi-hammer"></i></a>
                     <?php
                     }
                 ?>
@@ -205,13 +205,37 @@
     }
 
     function getMaxLance(){
+        var lanceAtual = parseInt($("#vl_atual_label").text().substring(13), 10);
         $.post('operacao/buscarMaxLance.php', 
             {   id_leilao: id_leilao   },
             function(response){ 
                 var objLance = JSON.parse(response);
-                $("#vl_atual_label").html('Valor atual: '+objLance.vl_lance);
-                $("#nm_maior_lance").html('Maior lance por:'+objLance.nm_usuario);
+                if(lanceAtual < objLance.vl_lance){
+                    $("#vl_atual_label").html('Valor atual: '+objLance.vl_lance);
+                    $("#nm_maior_lance").html('Maior lance por:'+objLance.nm_usuario);
+                }
+                
             });
+    }
+
+    function arrematar(id_usuario){
+        
+            $.post('operacao/arrematar.php',
+                {
+                    id_leilao: id_leilao,
+                    id_usuario: id_usuario,
+                    vl_lance: parseInt($("#valor_arremate").text().substring(18), 10)
+                },
+                'json'
+            ).done(function(response){
+                var objLance = JSON.parse(response);
+                if(objLance.erro){
+                    alert(objLance.msg);
+                }else{
+                    window.location.href = 'paginas/user'
+                }
+            });
+        
     }
 
 /*

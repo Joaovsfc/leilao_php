@@ -2,6 +2,7 @@
     //se nao existir a variavel page
     if ( !isset ($page) ) exit;
 
+    
     $nome_item = $descricao_item = $id_item = $id_categoria_item = $foto = NULL;
 
     if ( !empty($id) ) {

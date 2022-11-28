@@ -88,3 +88,6 @@
         
     </div>
 </div>
+<script>
+    $.get( "operacao/finalizarLeiloes.php" );
+</script>

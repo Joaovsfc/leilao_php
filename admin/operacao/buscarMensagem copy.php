@@ -1,8 +1,6 @@
 <?php
     require "../../config.php";
 
-    
-    $arr = array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5);
 
     if(!$_POST){
         $id_leilao = trim($_POST['id_leilao']);

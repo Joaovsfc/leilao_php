@@ -1,6 +1,6 @@
 <div class="row" style="height: 3em;background-color: rgb(0, 204, 102)">
     <div class="col-5 padding:0">
-        <a href="">
+        <a href="paginas/user">
             <img src="./images/do-utilizador.png" alt="user_img" style="max-width: 3em; max-height: 3em;"> 
         </a>
         <span>Bem vindo: </span>
@@ -11,9 +11,9 @@
     </div><div class="col-3">
     </div>
     <div class="float-right col-2" style="padding: 0.2em 0 0 0">
-        <a href="http://localhost/leilao/admin/listar/itens" class="btn btn-secondary">Itens</a> 
+        <a href="listar/itens" class="btn btn-secondary">Itens</a> 
         <a href="http://localhost/leilao/admin/listar/leilao" class="btn btn-secondary">Leiloes</a>  
-        <a href="http://localhost/leilao/admin/sair.php" class="btn btn-secondary">sair</a>
+        <a href="sair.php" class="btn btn-secondary">sair</a>
     </div>
 
 </div>
