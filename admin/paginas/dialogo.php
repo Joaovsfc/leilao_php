@@ -2,6 +2,7 @@
     if ( !isset ( $page ) ) exit;
 
     if($id){
+     /*
         $sqlLeilao = "SELECT l.* , u.nome AS nome_leiloeiro
         FROM leilao l 
         JOIN usuario u
@@ -11,6 +12,14 @@
         $consultaLeilao->bindParam(":id_leilao", $id);    
         $consultaLeilao->execute();
         $dadosLeilao = $consultaLeilao->fetch(PDO::FETCH_OBJ);
+     */
+    $sqlLeilao = "SELECT u.* 
+    FROM usuario u
+    WHERE u.id_usuario = :id_usuario";
+    $consultaLeilao = $pdo->prepare($sqlLeilao);
+    $consultaLeilao->bindParam(":id_usuario", $id);    
+    $consultaLeilao->execute();
+    $dadosLeilao = $consultaLeilao->fetch(PDO::FETCH_OBJ);
     }
 ?>
 
@@ -18,7 +27,7 @@
     <div class="col-3"></div>
     <div class="card col-6" style="margin-top: 2em;">
         <div class="card-header">
-            <h2 class="float-left">Chat com: <?=$dadosLeilao->nome_leiloeiro?></h2>
+            <h2 class="float-left">Chat com: <?=$dadosLeilao->nome?></h2>
             <input type="hidden" value="<?=$dadosLeilao->id_usuario?>" id="id_leiloeiro">
         </div>
         <div class="card-body">
